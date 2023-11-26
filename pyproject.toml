@@ -1,0 +1,19 @@
+[project]
+name = "nand2tetris-python"
+version = "0.1.0"
+description = "Add a short description here"
+authors = [
+    { name = "unochanel", email = "shanksryouop@gmail.com" }
+]
+dependencies = ["black~=23.11.0", "fastapi~=0.104.1"]
+readme = "README.md"
+requires-python = ">= 3.9"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+[tool.hatch.metadata]
+allow-direct-references = true
