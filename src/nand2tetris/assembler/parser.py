@@ -10,10 +10,18 @@ class Parser:
         else:
             return False
 
-    # main,pyで呼び出す時にhas_more_commandがTrueのときにだけよびだされるつもりのmethod
+    # main.pyで呼び出す時にhas_more_commandがTrueのときにだけよびだされるつもりのmethod
     def advance(self):
         current_command = self.commands[self.executed_line]
         self.executed_line += 1
+
+        if current_command != '' and current_command[0:2] != '//':
+            if '//' in current_command:
+                self.current_command = current_command[:current_command.find('//')].strip()
+            else:
+                self.current_command = current_command
+        else:
+            pass
 
     def command_type(self) -> str:
         if self.current_command.find("@"):
@@ -25,25 +33,34 @@ class Parser:
         else:
             return None
 
-    # main,pyで呼び出す時にA_COMMANDかL_COMMANDときにだけよびだされるつもりのmethod
+    # main.pyで呼び出す時にA_COMMANDかL_COMMANDときにだけよびだされるつもりのmethod
     def symbol(self) -> str:
         if self.current_command[0] == "@":
             return self.current_command[1:]
         elif self.current_command[0] == "(":
             return self.current_command[1:-1]
 
-    # main,pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
+    # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def dest(self) -> str:
         if self.current_command.find("="):
             return self.current_command[: self.current_command.find("=")]
         else:
             return None
 
-    # main,pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
+    # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def comp(self) -> str:
-        return None
+        sc = self.current_command.find(";")
+        eq = self.current_command.find("=")
+        if eq and sc:
+            return self.current_command[eq + 1 : sc]
+        elif eq:
+            return self.current_command[eq + 1 :]
+        elif sc:
+            return self.current_command[: sc]
+        else:
+            return None
 
-    # main,pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
+    # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def jump(self) -> str:
         if self.current_command.find(";"):
             return self.current_command[self.current_command.find("=") + 1 :]
