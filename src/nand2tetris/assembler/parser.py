@@ -12,16 +12,21 @@ class Parser:
 
     # main.pyで呼び出す時にhas_more_commandがTrueのときにだけよびだされるつもりのmethod
     def advance(self):
-        current_command = self.commands[self.executed_line]
-        self.executed_line += 1
+        while True:
+            current_command = self.commands[self.executed_line].strip()
+            self.executed_line += 1
 
-        if current_command != '' and current_command[0:2] != '//':
-            if '//' in current_command:
-                self.current_command = current_command[:current_command.find('//')].strip()
+            if current_command != "" and current_command[0:2] != "//":
+                if "//" in current_command:
+                    self.current_command = current_command[
+                        : current_command.find("//")
+                    ].strip()
+                else:
+                    self.current_command = current_command
+                break
+
             else:
-                self.current_command = current_command
-        else:
-            pass
+                pass
 
     def command_type(self) -> str:
         if self.current_command.find("@"):
@@ -56,7 +61,7 @@ class Parser:
         elif eq:
             return self.current_command[eq + 1 :]
         elif sc:
-            return self.current_command[: sc]
+            return self.current_command[:sc]
         else:
             return None
 
