@@ -29,11 +29,11 @@ class Parser:
                 pass
 
     def command_type(self) -> str:
-        if self.current_command.find("@"):
+        if "@" in self.current_command:
             return "A_COMMAND"
-        elif self.current_command.find("(") and self.current_command.find(")"):
+        elif "(" in self.current_command and ")" in self.current_command:
             return "L_COMMAND"
-        elif self.current_command.find("=") or self.current_command.find(";"):
+        elif "=" in self.current_command or ";" in self.current_command:
             return "C_COMMAND"
         else:
             return None
@@ -47,27 +47,29 @@ class Parser:
 
     # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def dest(self) -> str:
-        if self.current_command.find("="):
+        if "=" in self.current_command:
             return self.current_command[: self.current_command.find("=")]
         else:
-            return None
+            return "null"
 
     # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def comp(self) -> str:
-        sc = self.current_command.find(";")
-        eq = self.current_command.find("=")
+        sc = ";" in self.current_command
+        eq = "=" in self.current_command
         if eq and sc:
-            return self.current_command[eq + 1 : sc]
+            return self.current_command[
+                self.current_command.find("=") + 1 : self.current_command.find(";")
+            ]
         elif eq:
-            return self.current_command[eq + 1 :]
+            return self.current_command[self.current_command.find("=") + 1 :]
         elif sc:
-            return self.current_command[:sc]
+            return self.current_command[: self.current_command.find(";")]
         else:
-            return None
+            raise ValueError("invalid input.")
 
     # main.pyで呼び出す時にC_COMMANDときにだけよびだされるつもりのmethod
     def jump(self) -> str:
-        if self.current_command.find(";"):
-            return self.current_command[self.current_command.find("=") + 1 :]
+        if ";" in self.current_command:
+            return self.current_command[self.current_command.find(";") + 1 :]
         else:
-            return None
+            return "null"

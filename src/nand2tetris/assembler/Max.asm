@@ -13,7 +13,7 @@ D;JGT
 @i
 D=M
 @sum
-M=M+D
+M=D+M
 @i
 M=M+1
 @LOOP

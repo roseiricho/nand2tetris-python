@@ -32,7 +32,7 @@ def main():
                 binary.append("0" + format(int(parser.symbol()), "015b"))
             elif not symbol_table.contains(parser.symbol()):
                 symbol_table.add_entry(parser.symbol(), symbol_address)
-                binary.append("0" + format(symbol_table.next_address, "015b"))
+                binary.append("0" + format(symbol_address, "015b"))
                 symbol_address += 1
             else:
                 binary.append(
