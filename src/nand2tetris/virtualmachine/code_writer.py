@@ -3,9 +3,6 @@ class VirtualMachineCodeWriter:
         self.output_file = output_file
         self.label_counter = 0
 
-    def set_file_name(self, file_name):
-        self.file_name = file_name
-
     def write_arithmetic(self, command):
         if command == "add":
             self.output_file.write("@SP\n")

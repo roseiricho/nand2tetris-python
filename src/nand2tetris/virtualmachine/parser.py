@@ -1,15 +1,19 @@
-class VirtualMachineParser:
-    input_file = None
+from typing import List, AnyStr
 
-    def __init__(self, input_file):
-        self.input_file = input_file
+
+class VirtualMachineParser:
+    def __init__(self, commands: List[AnyStr]):
+        self.commands = commands
         self.current_command = None
 
     def has_more_commands(self):
-        return self.current_command is not None or self.input_file.has_more_lines()
+        return self.current_command is not None or self._has_more_lines()
 
-    def advance(self):
-        self.current_command = self.input_file.next_line()
+    def advance(self) -> bool:
+        if self.current_command is None:
+            return False
+        self.current_command = self._next_line()
+        return True
 
     def command_type(self):
         if self.current_command.startswith("push"):
@@ -39,3 +43,11 @@ class VirtualMachineParser:
 
     def arg2(self):
         return int(self.current_command.split()[2])
+
+    def _has_more_lines(self):
+        return self.commands
+
+    def _next_line(self):
+        if not self.commands:
+            return None
+        return self.commands.pop(0)

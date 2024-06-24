@@ -1,19 +1,38 @@
-from nand2tetris.virtualmachine.parser import Parser
-from nand2tetris.virtualmachine.code_writer import CodeWriter
+from parser import VirtualMachineParser
+from code_writer import VirtualMachineCodeWriter
 
 
 def main():
-    parser = Parser("./SimpleAdd/SimpleAdd.vm")
-    code_writer = CodeWriter("./SimpleAdd/SimpleAdd.asm")
+    input_file = "./SimpleAdd/SimpleAdd.vm"
+    output_file = "./SimpleAdd/SimpleAdd.asm"
 
-    while parser.has_more_command():
-        parser.advance()
-        if parser.command_type() == "C_ARITHMETIC":
+    open_input_file = open(input_file, "r")
+    open_output_file = open(output_file, "w")
+
+    commands = open_input_file.readlines()
+    parser = VirtualMachineParser(commands)
+    code_writer = VirtualMachineCodeWriter(open_output_file)
+
+    while parser.has_more_commands():
+        result = parser.advance()
+        if not result:
+            break
+
+        command_type = parser.command_type()
+        if command_type == "C_ARITHMETIC":
             code_writer.write_arithmetic(parser.current_command)
-        elif parser.command_type() == "C_PUSH":
-            code_writer.write_push_pop("push", parser.arg1(), parser.arg2())
-        elif parser.command_type() == "C_POP":
-            code_writer.write_push_pop("pop", parser.arg1(), parser.arg2())
+        elif command_type == "C_PUSH":
+            code_writer.write_push_pop(
+                command_type,
+                parser.arg1(),
+                parser.arg2(),
+            )
+        elif command_type == "C_POP":
+            code_writer.write_push_pop(
+                command_type,
+                parser.arg1(),
+                parser.arg2(),
+            )
         else:
             raise ValueError("Invalid command type")
 
